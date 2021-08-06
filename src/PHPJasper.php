@@ -99,7 +99,7 @@ class PHPJasper
             throw new Exception\InvalidInputFile();
         }
 
-        $this->command = $this->checkServer();
+        $this->command = substr($this->checkServer(), 2);
         $this->command .= ' compile ';
         $this->command .= '"' . realpath($input) . '"';
 
@@ -121,15 +121,13 @@ class PHPJasper
     public function process(string $input, string $output, array $options = [])
     {
         $options = $this->parseProcessOptions($options);
-
         if (!$input) {
             throw new Exception\InvalidInputFile();
         }
 
         $this->validateFormat($options['format']);
 
-        $this->command = $this->checkServer();
-
+        $this->command = substr($this->checkServer(), 2);
         if ($options['locale']) {
             $this->command .= " --locale {$options['locale']}";
         }
@@ -172,7 +170,6 @@ class PHPJasper
         if ($options['resources']) {
             $this->command .= " -r {$options['resources']}";
         }
-
         return $this;
     }
 
@@ -243,9 +240,9 @@ class PHPJasper
         $output = [];
         $returnVar = 0;
 
-        chdir($this->pathExecutable);
+        // chdir($this->pathExecutable);
         exec($this->command, $output, $returnVar);
-
+        
         if ($returnVar !== 0) {
             throw new Exception\ErrorCommandExecutable();
         }
